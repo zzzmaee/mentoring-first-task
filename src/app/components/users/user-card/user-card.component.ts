@@ -14,10 +14,15 @@ import { MatIcon } from '@angular/material/icon';
   styleUrl: './user-card.component.scss'
 })
 export class UserCardComponent {
-  @Input() user!: User;
+  @Input({required: true}) user!: User;
   @Output() deleteEvent = new EventEmitter<number>();
+  @Output() editEvent = new EventEmitter<User>()
 
-  public deleteUser(id:number): void {
-    this.deleteEvent.emit(id)
+  public userDelete(): void {
+    this.deleteEvent.emit(this.user.id)
+  }
+
+  public userEdit(): void {
+    this.editEvent.emit(this.user)
   }
 }

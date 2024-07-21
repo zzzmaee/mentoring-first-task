@@ -1,4 +1,4 @@
-import { Component, inject, Inject } from '@angular/core';
+import { Component, inject, Inject, OnInit } from '@angular/core';
 import { MatCard, MatCardActions, MatCardContent, MatCardHeader } from '@angular/material/card';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
@@ -24,29 +24,32 @@ import { MAT_DIALOG_DATA, MatDialogActions, MatDialogRef } from '@angular/materi
   templateUrl: './create-edit-user.component.html',
   styleUrl: './create-edit-user.component.scss'
 })
-export class CreateEditUserComponent {
-  private readonly dialogRef = inject(MatDialogRef<CreateEditUserComponent>);
+export class CreateEditUserComponent implements OnInit {
   private readonly fb = inject(FormBuilder);
+  private readonly dialogRef = inject(MatDialogRef<CreateEditUserComponent>);
 
   public userForm: FormGroup;
-  public isEdit!: boolean;
+  public isEdit: boolean;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any) {
-    this.isEdit = !!data;
+    this.isEdit = data.isEdit
     this.userForm = this.fb.group({
       id: [data?.id || null],
-      name: [data?.name || '', [Validators.required]],
-      username: [data?.username || '', [Validators.required]],
+      name: [data?.name || '', Validators.required],
+      username: [data?.username || '', Validators.required],
       email: [data?.email || '', [Validators.required, Validators.email]],
       phone: [data?.phone || '', [Validators.required, Validators.pattern(/^[0-9]+$/)]],
     });
   }
 
+  ngOnInit(): void {
+    this.userForm.patchValue({...this.data});
+  }
+
   public saveUser(): void {
     if (this.userForm.valid) {
       this.dialogRef.close(this.userForm.value);
-      this.userForm.patchValue(this.data.user)
     }
   }
 

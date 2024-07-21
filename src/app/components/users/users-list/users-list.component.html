@@ -1,10 +1,10 @@
 <div>
-  <button (click)="openAddDialog()" mat-raised-button color="primary">Add User</button>
+  <button class="btn" (click)="openAddDialog()" mat-raised-button color="primary">Add User</button>
 </div>
 <div *ngFor="let user of users$ | async">
   <app-user-card
     [user]="user"
-    (deleteEvent)="onDeleteUser($event)">
+    (deleteEvent)="onDeleteUser($event)"
+    (editEvent)="openEditDialog($event)">
   </app-user-card>
 </div>
-

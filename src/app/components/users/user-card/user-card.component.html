@@ -1,11 +1,10 @@
 <div class="user-card">
-  <h2>ID: {{ user.id }}</h2>
+  <h1>ID: {{ user.id }}</h1>
   <p>name: {{ user.name }}</p>
   <p>username: {{ user.username }}</p>
   <p>email: {{ user.email }}</p>
   <p>phone: {{ user.phone }}</p>
-  <button mat-raised-button color="warn" (click)="deleteUser(user.id)">
-    <mat-icon fontIcon="delete"></mat-icon>
-    Удалить
-  </button>
+  <button class="btn" (click)="userEdit()" mat-raised-button color="primary"><mat-icon fontIcon="edit"></mat-icon>edit</button>
+  <button class="btn" mat-raised-button color="warn" (click)="userDelete()">
+    <mat-icon fontIcon="delete"></mat-icon></button>
 </div>

@@ -2,7 +2,7 @@
   <mat-card>
 
     <mat-card-header>
-      <h1>{{ isEdit ? 'Edit' : 'Add' }}</h1>
+      <h1>{{ isEdit ? 'Add User' : 'Edit' }}</h1>
     </mat-card-header>
 
     <mat-card-content>
@@ -25,7 +25,9 @@
     </mat-card-content>
 
     <mat-card-actions>
-      <button type="submit" [disabled]="userForm.invalid" mat-raised-button color="primary">{{ isEdit ? "Save" : "Add" }}</button>
+      <button type="submit" [disabled]="userForm.invalid" mat-raised-button
+              color="primary">{{ isEdit ? "Add" : "Save" }}
+      </button>
       <button (click)="closePopup()" mat-raised-button color="accent">Закрыть</button>
     </mat-card-actions>
 

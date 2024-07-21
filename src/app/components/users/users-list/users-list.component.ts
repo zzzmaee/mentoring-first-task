@@ -39,12 +39,25 @@ export class UsersListComponent implements OnInit {
     const dialogWindow = this.dialog.open(CreateEditUserComponent, {
       width: '40%',
       data: {
-        isEdit: false,
-        title: 'Add User'
+        isEdit: true,
       }
     });
     dialogWindow.afterClosed().subscribe((result) => {
-      this.usersService.addUser(result);
+      if (result) {
+        this.usersService.addUser(result);
+      }
+    });
+  }
+
+  public openEditDialog(user: User): void {
+    const dialogWindow = this.dialog.open(CreateEditUserComponent, {
+      width: '40%',
+      data: user
+    });
+    dialogWindow.afterClosed().subscribe((result) => {
+      if (result) {
+        this.usersService.editUser(result);
+      }
     });
   }
 }
