@@ -2,6 +2,10 @@ import { Component, inject, OnInit } from '@angular/core';
 import { UsersService } from '../../../services/users.service';
 import { UserCardComponent } from '../user-card/user-card.component';
 import { AsyncPipe, NgForOf } from '@angular/common';
+import { MatDialog } from '@angular/material/dialog';
+import { CreateEditUserComponent } from '../create-edit-user/create-edit-user.component';
+import { MatButton } from '@angular/material/button';
+import { User } from '../user.model';
 
 @Component({
   selector: 'app-users-list',
@@ -9,7 +13,8 @@ import { AsyncPipe, NgForOf } from '@angular/common';
   imports: [
     UserCardComponent,
     NgForOf,
-    AsyncPipe
+    AsyncPipe,
+    MatButton
   ],
   templateUrl: './users-list.component.html',
   styleUrl: './users-list.component.scss'
@@ -17,12 +22,29 @@ import { AsyncPipe, NgForOf } from '@angular/common';
 export class UsersListComponent implements OnInit {
   private usersService = inject(UsersService);
   public users$ = this.usersService.users$;
+  private dialog = inject(MatDialog);
+
+  constructor() {
+  }
 
   ngOnInit(): void {
     this.usersService.loadUsers();
   }
 
-  public deleteUser(id: number): void {
+  public onDeleteUser(id: number): void {
     this.usersService.deleteUser(id);
+  }
+
+  public openAddDialog() {
+    const dialogWindow = this.dialog.open(CreateEditUserComponent, {
+      width: '40%',
+      data: {
+        isEdit: false,
+        title: 'Add User'
+      }
+    });
+    dialogWindow.afterClosed().subscribe((result) => {
+      this.usersService.addUser(result);
+    });
   }
 }
