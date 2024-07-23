@@ -5,19 +5,14 @@ import { User } from '../components/users/user.model';
   providedIn: 'root',
 })
 export class LocalStorageService {
+  public readonly KEY = 'users';
 
-  getUsers(): User[] | [] {
-    const data = localStorage.getItem('Users');
-    return data ? JSON.parse(data) : [];
+  public getUsers(): User[] {
+    const storedUsers = localStorage.getItem(this.KEY);
+    return storedUsers ? JSON.parse(storedUsers) : [];
   }
 
-  setUsers(data: string): string {
-    localStorage.setItem('Users', data);
-    return data;
-  }
-
-  removeUsers(): boolean {
-    localStorage.removeItem('Users');
-    return true;
+  public saveUsers(users: User[]) {
+    localStorage.setItem(this.KEY, JSON.stringify(users));
   }
 }
