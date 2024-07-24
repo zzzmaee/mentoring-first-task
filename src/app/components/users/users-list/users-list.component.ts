@@ -1,11 +1,14 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { UsersService } from '../../../services/users.service';
 import { UserCardComponent } from '../user-card/user-card.component';
 import { AsyncPipe, NgForOf } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
 import { CreateEditUserComponent } from '../create-edit-user/create-edit-user.component';
 import { MatButton } from '@angular/material/button';
 import { User } from '../user.model';
+import { Store } from '@ngrx/store';
+import { AppModel } from '../../../+state/global/app.model';
+import { getUsers } from '../../../+state/store/users/users.selectors';
+import * as UsersActions from '../../../+state/store/users/users.actions';
 
 @Component({
   selector: 'app-users-list',
@@ -20,19 +23,24 @@ import { User } from '../user.model';
   styleUrl: './users-list.component.scss'
 })
 export class UsersListComponent implements OnInit {
-  private usersService = inject(UsersService);
-  public users$ = this.usersService.users$;
+  private store = inject(Store<AppModel>);
+  public users$ = this.store.select(getUsers);
   private dialog = inject(MatDialog);
 
   constructor() {
   }
 
   ngOnInit(): void {
-    this.usersService.loadUsers();
+    const users = localStorage.getItem('users');
+    if (users) {
+      this.store.dispatch(UsersActions.loadUsersSuccess({users: JSON.parse(users) as User[]}));
+    } else {
+      this.store.dispatch(UsersActions.initUsers()); // Запрос к API для получения данных
+    }
   }
 
   public onDeleteUser(id: number): void {
-    this.usersService.deleteUser(id);
+    this.store.dispatch(UsersActions.deleteUser({id: id}));
   }
 
   public openAddDialog() {
@@ -44,7 +52,7 @@ export class UsersListComponent implements OnInit {
     });
     dialogWindow.afterClosed().subscribe((result) => {
       if (result) {
-        this.usersService.addUser(result);
+        this.store.dispatch(UsersActions.addUser({userData: result}));
       }
     });
   }
@@ -56,7 +64,7 @@ export class UsersListComponent implements OnInit {
     });
     dialogWindow.afterClosed().subscribe((result) => {
       if (result) {
-        this.usersService.editUser(result);
+        this.store.dispatch(UsersActions.editUser({userData: result}));
       }
     });
   }
