@@ -33,7 +33,7 @@ export class CreateEditUserComponent implements OnInit {
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any) {
-    this.isEdit = data.isEdit
+    this.isEdit = data.isEdit;
     this.userForm = this.fb.group({
       id: [data?.id || null],
       name: [data?.name || '', Validators.required],
